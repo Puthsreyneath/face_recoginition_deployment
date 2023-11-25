@@ -11,25 +11,42 @@ pca = load('pca.pkl')
 scaler = load('scaler.pkl')
 
 # create rezise and gray_scale function for preprocessing the input image
-def resize_image(image, target_size=(100, 100)):
-    resized_image = cv2.resize(np.array(image), target_size)
-    return resized_image
+# Assuming you have a global variable for the face cascade
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+# Assuming you have a global variable for the target size of the detected face
+target_size = (100, 100)
+
+def detect_single_face(image):
+    # Detect faces
+    faces = face_cascade.detectMultiScale(image, scaleFactor=1.2, minNeighbors=5)
+
+    if len(faces) == 1:
+        (x, y, w, h) = faces[0]
+        # Crop and resize the face to a fixed size (e.g., 100x100)
+        detected_face = cv2.resize(image[y:y+h, x:x+w], target_size)
+        return detected_face
+
+    # Return None if no face or more than one face is detected
+    return None
 
 def gray_scale(image):
     gray_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
     return gray_image
 
 
+
+
 # Function to preprocess and extract features from an input image
 def preprocess_and_extract_features(image):
-    # Resize the image to the target size
-    resized_image = resize_image(image, target_size=(100, 100))
-
     # Convert the image to grayscale
-    gray_image = gray_scale(resized_image)
+    gray_image = gray_scale(image)
+
+    # Resize the image to the target size
+    detected_image = detect_single_face(gray_image)
 
     # Flatten and scale the image
-    flattened_image = gray_image.reshape(1, -1)
+    flattened_image = detected_image.reshape(1, -1)
     scaled_image = scaler.transform(flattened_image)
 
     # Apply PCA transformation
