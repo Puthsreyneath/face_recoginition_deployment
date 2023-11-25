@@ -23,7 +23,7 @@ def gray_scale(image):
 # Function to preprocess and extract features from an input image
 def preprocess_and_extract_features(image):
     # Resize the image to the target size
-    resized_image = resize_image(image, target_size=(64, 64))
+    resized_image = resize_image(image, target_size=(100, 100))
 
     # Convert the image to grayscale
     gray_image = gray_scale(resized_image)
