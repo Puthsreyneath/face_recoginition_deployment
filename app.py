@@ -45,6 +45,10 @@ def preprocess_and_extract_features(image):
     # Resize the image to the target size
     detected_image = detect_single_face(gray_image)
 
+    # check if no face or more than one face is detected
+    if detected_image is None:
+            return None
+    
     # Flatten and scale the image
     flattened_image = detected_image.reshape(1, -1)
     scaled_image = scaler.transform(flattened_image)
@@ -113,6 +117,11 @@ def main():
         # Preprocess and extract features from the uploaded image
         features = preprocess_and_extract_features(image)
 
+        # check if no face or more than one face is detected
+        if features is None:
+            st.markdown(f"### <span style='color:red;'>No Face or More than One Face is detected!</span>", unsafe_allow_html=True)
+            return 
+        
         # Make predictions using the loaded SVM model
         prediction = loaded_model.predict(features)[0]
 
