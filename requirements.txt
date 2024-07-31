@@ -33,7 +33,6 @@ GitPython==3.1.40
 idna==3.4
 imageio==2.33.0
 importlib-metadata==6.8.0
-install
 ipykernel==6.23.1
 ipynb==0.5.1
 ipython==8.13.2
